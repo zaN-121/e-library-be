@@ -29,6 +29,7 @@ public class Book {
     private IsAvailable isAvailable;
     @Column(name = "stock",nullable = false)
     private Integer stock;
-    @OneToMany
+    @ManyToOne
     private Category category;
+
 }
