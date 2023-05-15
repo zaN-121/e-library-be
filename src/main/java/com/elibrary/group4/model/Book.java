@@ -19,8 +19,8 @@ public class Book {
     private String bookId;
     @Column(name = "title",nullable = false)
     private String title;
-    @Column(name = "author_id",nullable = false)
-    private String authorId;
+    @Column(name = "author_name",nullable = false)
+    private String authorName;
     @Column(name = "publisher",nullable = false)
     private String publisher;
     @Column(name = "publication_year",nullable = false)
