@@ -22,7 +22,7 @@ public class AuthService {
     public String login(User user){
         try {
             User getUser = authRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
-            String token = jwtUtil.generateToken("elibrary");
+            String token = jwtUtil.generateToken(getUser.getUserId(),getUser.getRole());
             if(user.getEmail().equals(getUser.getEmail()) && user.getPassword().equals(getUser.getPassword())){
                 return token;
             }else {

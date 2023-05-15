@@ -1,5 +1,6 @@
 package com.elibrary.group4.Utils.Validation;
 
+import com.elibrary.group4.Utils.Constants.Role;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,9 +15,10 @@ public class JwtUtil {
     private Integer jwtExparation;
 
 
-    public String generateToken(String subject) {
+    public String generateToken(String userId, Role role) {
         JwtBuilder builder = Jwts.builder()
-                .setSubject(subject)
+                .setSubject(role.toString())
+                .setId(userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExparation))
                 .signWith(SignatureAlgorithm.HS256, jwtSecret);
