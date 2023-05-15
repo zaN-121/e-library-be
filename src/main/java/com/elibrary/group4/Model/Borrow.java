@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_borrow")
@@ -25,4 +26,8 @@ public class Borrow {
     private BorrowState borrowState;
     @Column(name = "late_charge",nullable = false)
     private Double lateCharge;
+    @ManyToOne
+    private List<User> users;
+    @ManyToOne
+    private List<Book> books;
 }
