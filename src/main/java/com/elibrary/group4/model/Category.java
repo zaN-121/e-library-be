@@ -1,4 +1,4 @@
-package com.elibrary.group4.Model;
+package com.elibrary.group4.model;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.*;

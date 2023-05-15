@@ -1,4 +1,4 @@
-package com.elibrary.group4.Model;
+package com.elibrary.group4.model;
 
 import com.elibrary.group4.Utils.Constants.BorrowState;
 import jakarta.annotation.Generated;
