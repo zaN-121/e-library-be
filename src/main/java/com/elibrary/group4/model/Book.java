@@ -1,4 +1,4 @@
-package com.elibrary.group4.Model;
+package com.elibrary.group4.model;
 
 import com.elibrary.group4.Utils.Constants.IsAvailable;
 import jakarta.annotation.Generated;
@@ -29,6 +29,7 @@ public class Book {
     private IsAvailable isAvailable;
     @Column(name = "stock",nullable = false)
     private Integer stock;
-    @OneToMany
+    @ManyToOne
     private Category category;
+
 }

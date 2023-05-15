@@ -1,4 +1,4 @@
-package com.elibrary.group4.Model;
+package com.elibrary.group4.model;
 
 import com.elibrary.group4.Utils.Constants.BorrowState;
 import jakarta.annotation.Generated;
@@ -27,7 +27,7 @@ public class Borrow {
     @Column(name = "late_charge",nullable = false)
     private Double lateCharge;
     @ManyToOne
-    private List<User> users;
+    private User user;
     @ManyToOne
-    private List<Book> books;
+    private Book book;
 }
