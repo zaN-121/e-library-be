@@ -4,7 +4,9 @@ import com.elibrary.group4.Utils.Validation.JwtUtil;
 import com.elibrary.group4.model.User;
 import com.elibrary.group4.repository.AuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthService {
     @Autowired
     AuthRepository authRepository;
