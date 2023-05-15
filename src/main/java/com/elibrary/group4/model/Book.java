@@ -31,5 +31,4 @@ public class Book {
     private Integer stock;
     @ManyToOne
     private Category category;
-
 }
