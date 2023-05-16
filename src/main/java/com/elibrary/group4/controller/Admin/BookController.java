@@ -4,17 +4,18 @@ import com.elibrary.group4.model.Book;
 import com.elibrary.group4.model.request.BookRequest;
 import com.elibrary.group4.model.response.SuccessResponse;
 import com.elibrary.group4.service.BookService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/book")
+@Validated
 public class BookController {
     @Autowired
     BookService bookService;
@@ -22,9 +23,31 @@ public class BookController {
     ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity createBook(@RequestBody BookRequest request) throws Exception {
+    public ResponseEntity createBook(@Valid @RequestBody BookRequest request) throws Exception {
         Book book =  bookService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<Book>("Created",book));
     }
 
+    @GetMapping
+    public ResponseEntity getAll(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "5") Integer size,
+            @RequestParam(defaultValue = "DESC") String direction,
+            @RequestParam(defaultValue = "courseId") String sortBy
+    ) throws Exception {
+        Page<Book> books =bookService.list(page, size, direction, sortBy);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",books));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity update(@Valid @RequestBody BookRequest request, @PathVariable("id") String id) throws Exception{
+        bookService.update(request,id);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Updated", request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable("id")String id) throws Exception{
+        bookService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Deleted",null));
+    }
 }

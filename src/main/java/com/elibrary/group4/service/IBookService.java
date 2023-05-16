@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface IBookService {
-    List<Book> list() throws Exception;
     Book create(BookRequest bookRequest) throws Exception;
     Book get(String bookId) throws Exception;
     void update(BookRequest bookRequest, String bookId) throws Exception;

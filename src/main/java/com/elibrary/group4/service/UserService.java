@@ -2,14 +2,13 @@ package com.elibrary.group4.service;
 import com.elibrary.group4.exception.NotFoundException;
 import com.elibrary.group4.model.User;
 import com.elibrary.group4.model.request.UserRequest;
-import com.elibrary.group4.repository.IFileRepository;
 import com.elibrary.group4.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.Optional;
 
