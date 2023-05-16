@@ -27,6 +27,8 @@ public class BookService implements IBookService {
     private BookRepository bookRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private IUploadService uploadService;
 
     @Override
     public List<Book> list() throws Exception {
@@ -36,12 +38,20 @@ public class BookService implements IBookService {
     @Override
     public Book create(BookRequest bookRequest) throws Exception {
         try {
+            String filePath = "";
             Optional<Category> category = categoryRepository.findById(bookRequest.getCategoryId());
+
             if (category.isEmpty()) {
                 throw new NotFoundException("Category is not found");
             }
+
+            if (!bookRequest.getImage().isEmpty()) {
+                filePath = uploadService.uploadMaterial(bookRequest.getImage());
+            }
+
             Book book = new Book();
             book.setTitle(bookRequest.getTitle());
+            book.setImage(filePath);
             book.setAuthorName(bookRequest.getAuthorName());
             book.setPublisher(bookRequest.getPublisher());
             book.setPublicationYear(bookRequest.getPublicationYear());
