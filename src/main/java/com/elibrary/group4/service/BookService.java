@@ -36,6 +36,7 @@ public class BookService implements IBookService {
     @Override
     public Book create(BookRequest bookRequest) throws Exception {
         try {
+            String filePath = "";
             Optional<Category> category = categoryRepository.findById(bookRequest.getCategoryId());
             if (category.isEmpty()) {
                 throw new NotFoundException("Category is not found");

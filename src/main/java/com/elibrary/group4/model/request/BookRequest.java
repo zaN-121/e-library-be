@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 public class BookRequest {
     @NotBlank(message = "{invalid.title.required}")
     private String title;
+    private MultipartFile image;
     @NotBlank(message = "{invalid.author.name.required}")
     private String authorName;
     @NotBlank(message = "{invalid.publisher.required}")
