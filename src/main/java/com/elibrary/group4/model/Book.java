@@ -5,6 +5,7 @@ import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -19,6 +20,8 @@ public class Book {
     private String bookId;
     @Column(name = "title",nullable = false)
     private String title;
+    @Column(name = "image", nullable = false)
+    private String image;
     @Column(name = "author_name",nullable = false)
     private String authorName;
     @Column(name = "publisher",nullable = false)
