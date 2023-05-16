@@ -1,6 +1,8 @@
 package com.elibrary.group4.service;
 import com.elibrary.group4.model.User;
+import com.elibrary.group4.repository.IFileRepository;
 import com.elibrary.group4.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
@@ -8,7 +10,10 @@ import java.util.Optional;
 
 @Service
 public class UserService implements IService<User>{
+    @Autowired
     UserRepository userRepository;
+    @Autowired
+    IFileRepository fileRepository;
     @Override
     public Iterable<User> findAll() {
 
@@ -31,6 +36,8 @@ public class UserService implements IService<User>{
     @Override
     public User add(User user) {
         try{
+            String filePath = "";
+
             return userRepository.save(user);
         }catch(Exception e){
             throw new RuntimeException(e);
