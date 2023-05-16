@@ -38,6 +38,7 @@ public class BookService implements IBookService {
         try {
             String filePath = "";
             Optional<Category> category = categoryRepository.findById(bookRequest.getCategoryId());
+
             if (category.isEmpty()) {
                 throw new NotFoundException("Category is not found");
             }
