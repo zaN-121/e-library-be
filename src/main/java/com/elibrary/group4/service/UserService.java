@@ -36,12 +36,13 @@ public class UserService implements IUserService {
 
             User user = new User();
             user.setFirstName(userRequest.getFirstName());
-            user.setLastName(userRequest.getLastName());
             user.setImage(filePath);
+            user.setLastName(userRequest.getLastName());
             user.setUserName(userRequest.getUserName());
             user.setEmail(userRequest.getEmail());
             user.setPhone(userRequest.getPhone());
             user.setPassword(userRequest.getPassword());
+            user.setRole(userRequest.getRole());
 
             return userRepository.save(user);
 

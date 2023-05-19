@@ -21,7 +21,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody UserRequest request) throws Exception {
+    public ResponseEntity create(@Valid UserRequest request) throws Exception {
         User user = userService.Create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<>("Created", user));
     }
