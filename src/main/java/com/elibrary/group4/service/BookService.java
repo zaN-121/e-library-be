@@ -29,12 +29,6 @@ public class BookService implements IBookService {
     private CategoryRepository categoryRepository;
     @Autowired
     private IUploadService uploadService;
-
-    @Override
-    public List<Book> list() throws Exception {
-        return bookRepository.findAll();
-    }
-
     @Override
     public Book create(BookRequest bookRequest) throws Exception {
         try {
