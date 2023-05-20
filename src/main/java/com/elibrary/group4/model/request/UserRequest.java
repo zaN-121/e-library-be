@@ -1,5 +1,6 @@
 package com.elibrary.group4.model.request;
 
+import com.elibrary.group4.Utils.Constants.Role;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,4 +14,6 @@ public class UserRequest {
     private String email;
     private String phone;
     private String password;
+    private Role role;
+
 }

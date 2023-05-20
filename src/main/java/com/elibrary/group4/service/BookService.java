@@ -1,6 +1,7 @@
 package com.elibrary.group4.service;
 
 
+import com.elibrary.group4.Utils.Constants.IsAvailable;
 import com.elibrary.group4.exception.NotFoundException;
 import com.elibrary.group4.model.Book;
 import com.elibrary.group4.model.Category;
@@ -49,7 +50,7 @@ public class BookService implements IBookService {
             book.setAuthorName(bookRequest.getAuthorName());
             book.setPublisher(bookRequest.getPublisher());
             book.setPublicationYear(bookRequest.getPublicationYear());
-            book.setIsAvailable(bookRequest.getIsAvailable());
+            book.setIsAvailable(IsAvailable.AVAILABLE);
             book.setStock(bookRequest.getStock());
             book.setCategory(category.get());
             return bookRepository.save(book);
@@ -75,8 +76,13 @@ public class BookService implements IBookService {
             existingBook.setAuthorName(bookRequest.getAuthorName());
             existingBook.setPublisher(bookRequest.getPublisher());
             existingBook.setPublicationYear(bookRequest.getPublicationYear());
-            existingBook.setIsAvailable(bookRequest.getIsAvailable());
             existingBook.setStock(bookRequest.getStock());
+            if(bookRequest.getStock()>=1){
+                existingBook.setIsAvailable(IsAvailable.AVAILABLE);
+            }
+            else{
+                existingBook.setIsAvailable(IsAvailable.NOTAVAILABLE);
+            }
             bookRepository.save(existingBook);
         } catch (NotFoundException e) {
             throw new NotFoundException("Update failed because ID is not found!");

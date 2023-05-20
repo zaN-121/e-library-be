@@ -31,7 +31,7 @@ public class CategoryController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "5") Integer size,
             @RequestParam(defaultValue = "DESC") String direction,
-            @RequestParam(defaultValue = "courseId") String sortBy
+            @RequestParam(defaultValue = "categoryId") String sortBy
     ) throws Exception {
         Page<Category> get = categoryService.list(page, size, direction, sortBy);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",get));

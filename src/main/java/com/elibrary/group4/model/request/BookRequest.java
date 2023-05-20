@@ -18,11 +18,11 @@ public class BookRequest {
     private String authorName;
     @NotBlank(message = "{invalid.publisher.required}")
     private String publisher;
-    @NotBlank(message = "{invalid.publication.year.required}")
+//    @NotBlank(message = "{invalid.publication.year.required}")
     private LocalDate publicationYear;
-    @NotBlank(message = "{invalid.is.available.required}")
-    private IsAvailable isAvailable;
-    @NotBlank(message = "{invalid.stock.required}")
+//    @NotBlank(message = "{invalid.is.available.required}")
+//    private IsAvailable isAvailable;
+//    @NotBlank(message = "{invalid.stock.required}")
     @Min(1)
     private Integer stock;
     @NotBlank(message = "{invalid.category.id.required}")
