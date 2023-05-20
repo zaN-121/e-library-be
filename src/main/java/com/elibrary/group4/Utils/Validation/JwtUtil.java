@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtUtil {
@@ -40,5 +42,17 @@ public class JwtUtil {
         }catch (SignatureException e){
             throw new RuntimeException("Jwt Signature not match");
         }
+    }
+
+    public  Map<String, String> getRoleAndId(String token) {
+        token = token.split(" ")[1];
+        Map<String, String> roleAndId = new HashMap<>();
+        String id = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getId();
+        String role = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+
+        roleAndId.put("userId", id);
+        roleAndId.put("role", role);
+
+        return roleAndId;
     }
 }
