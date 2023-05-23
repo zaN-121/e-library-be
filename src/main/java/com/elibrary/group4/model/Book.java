@@ -27,7 +27,7 @@ public class Book {
     @Column(name = "publisher",nullable = false)
     private String publisher;
     @Column(name = "publication_year",nullable = false)
-    private LocalDate publicationYear;
+    private Integer publicationYear;
     @Column(name = "isAvailable",nullable = false)
     private IsAvailable isAvailable;
     @Column(name = "stock",nullable = false)

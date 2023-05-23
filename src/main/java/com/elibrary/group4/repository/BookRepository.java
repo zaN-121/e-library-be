@@ -2,6 +2,7 @@ package com.elibrary.group4.repository;
 
 import com.elibrary.group4.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface BookRepository  extends JpaRepository<Book, String> {
+public interface BookRepository  extends JpaRepository<Book, String>, JpaSpecificationExecutor<Book> {
     List<Book> findByTitleContains(String title);
     List<Book> findByAuthorNameContains(String authorName);
     List<Book> findByPublisherContains(String publisher);

@@ -2,6 +2,7 @@ package com.elibrary.group4.model;
 
 import com.elibrary.group4.Utils.Constants.Role;
 import jakarta.annotation.Generated;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
@@ -20,7 +21,8 @@ public class User {
     private String firstName;
     @Column(name = "last_name",nullable = false)
     private String lastName;
-    @Column(name = "image", nullable = false)
+    @Column(name = "image")
+    @Nullable
     private String image;
     @Column(name = "user_name",nullable = false)
     private String userName;

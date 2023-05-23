@@ -3,10 +3,12 @@ package com.elibrary.group4.service;
 import com.elibrary.group4.Utils.Validation.JwtUtil;
 import com.elibrary.group4.model.User;
 import com.elibrary.group4.repository.AuthRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class AuthService {
     @Autowired
     AuthRepository authRepository;

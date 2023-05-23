@@ -33,9 +33,16 @@ public class BookController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "5") Integer size,
             @RequestParam(defaultValue = "DESC") String direction,
-            @RequestParam(defaultValue = "bookId") String sortBy
+            @RequestParam(defaultValue = "bookId") String sortBy,
+            @RequestParam(defaultValue = "") String title,
+            @RequestParam(defaultValue = "") String authorName,
+            @RequestParam(defaultValue = "") String publisher,
+//            @RequestParam(defaultValue = "") String publicationYear,
+            @RequestParam(defaultValue = "") String category
+
     ) throws Exception {
-        Page<Book> books =bookService.list(page, size, direction, sortBy);
+//        Page<Book> books = bookService.list(page, size, direction, sortBy);
+        Page<Book> books =bookService.listBooksUsingSpecification(page, size, sortBy, direction, title, authorName, publisher, category);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",books));
     }
 

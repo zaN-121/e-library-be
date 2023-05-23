@@ -19,7 +19,7 @@ public class BookRequest {
     @NotBlank(message = "{invalid.publisher.required}")
     private String publisher;
 //    @NotBlank(message = "{invalid.publication.year.required}")
-    private LocalDate publicationYear;
+    private Integer publicationYear;
 //    @NotBlank(message = "{invalid.is.available.required}")
 //    private IsAvailable isAvailable;
 //    @NotBlank(message = "{invalid.stock.required}")

@@ -1,6 +1,7 @@
 package com.elibrary.group4.service;
 
 
+import com.elibrary.group4.Specification.BookSpecification;
 import com.elibrary.group4.Utils.Constants.IsAvailable;
 import com.elibrary.group4.exception.NotFoundException;
 import com.elibrary.group4.model.Book;
@@ -15,10 +16,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -151,5 +156,29 @@ public class BookService implements IBookService {
         Sort sort = Sort.by(Sort.Direction.valueOf(direction), sortBy);
         Pageable pageable = PageRequest.of((page -1), size, sort);
         return bookRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Book> listBooksUsingSpecification(Integer page, Integer pageSize, String sortField, String direction, String title, String authorName, String publisher, String category) {
+
+
+        Sort sort = Sort.by(Sort.Direction.valueOf(direction), sortField);
+        Pageable pageable = PageRequest.of((page -1), pageSize, sort);
+
+        Specification<Book> spec = BookSpecification.builder()
+                .title(title)
+                .authorName(authorName)
+                .publisher(publisher)
+//                .publicationYear(Integer.parseInt(publicationYear))
+                .category(category)
+                .build();
+
+        Page<Book> books = bookRepository.findAll(spec, pageable);
+
+        return books;
+    }
+
+    private Pageable pageable(int page, int pageSize, String sortField, Sort.Direction sortDirection) {
+        return PageRequest.of(page, pageSize);
     }
 }
