@@ -11,13 +11,14 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt_secret}")
+    @Value("elibraryfkjdkajkfjakfjakfjakjfk")
     private String jwtSecret;
-    @Value("${jwt_expire}")
+    @Value("5000000")
     private Integer jwtExparation;
 
 
     public String generateToken(String userId, Role role) {
+
         JwtBuilder builder = Jwts.builder()
                 .setSubject(role.toString())
                 .setId(userId)

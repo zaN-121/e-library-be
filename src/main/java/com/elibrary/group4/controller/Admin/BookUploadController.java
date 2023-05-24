@@ -1,5 +1,7 @@
 package com.elibrary.group4.controller.Admin;
 
+import com.elibrary.group4.Utils.Validation.JwtUtil;
+import com.elibrary.group4.exception.ForbiddenException;
 import com.elibrary.group4.model.request.FormDataWithFile;
 import com.elibrary.group4.model.response.SuccessResponse;
 import com.elibrary.group4.service.UploadService;
@@ -22,8 +24,16 @@ public class BookUploadController {
     @Autowired
     private UploadService uploadService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping
-    public ResponseEntity upload(FormDataWithFile formDataWithFile) {
+    public ResponseEntity upload(@RequestHeader("Authorization") String token, FormDataWithFile formDataWithFile) {
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        if (!tokenAndRole.get("role").equals("ADMIN")) {
+            throw new ForbiddenException("Forbidden");
+        }
         MultipartFile file = formDataWithFile.getFile();
         uploadService.uploadMaterial(file);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<>("Success upload file", file.getOriginalFilename()));

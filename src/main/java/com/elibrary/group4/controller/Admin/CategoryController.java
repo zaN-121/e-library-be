@@ -1,5 +1,7 @@
 package com.elibrary.group4.controller.Admin;
 
+import com.elibrary.group4.Utils.Validation.JwtUtil;
+import com.elibrary.group4.exception.ForbiddenException;
 import com.elibrary.group4.model.Category;
 import com.elibrary.group4.model.request.CategoryRequest;
 import com.elibrary.group4.model.response.SuccessResponse;
@@ -20,8 +22,16 @@ public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
+    @Autowired
+    JwtUtil jwtUtil;
+
     @PostMapping
-    public ResponseEntity createCategory(@Valid @RequestBody CategoryRequest request) throws Exception{
+    public ResponseEntity createCategory(@RequestHeader("Authorization") String token, @Valid @RequestBody CategoryRequest request) throws Exception{
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        if (!tokenAndRole.get("role").equals("USER")) {
+            throw new ForbiddenException("Forbidden");
+        }
         Category category = categoryService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<Category>("Created", category));
     }
@@ -38,13 +48,24 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable("id") String id) throws Exception {
+    public ResponseEntity delete(@RequestHeader("Authorization") String token, @PathVariable("id") String id) throws Exception {
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        if (!tokenAndRole.get("role").equals("ADMIN")) {
+            throw new ForbiddenException("Forbidden");
+        }
         categoryService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Succes delete",null));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@Valid @RequestBody CategoryRequest request, @PathVariable("id") String id) throws Exception {
+    public ResponseEntity update(@RequestHeader("Authorization") String token, @Valid @RequestBody CategoryRequest request, @PathVariable("id") String id) throws Exception {
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        if (!tokenAndRole.get("role").equals("ADMIN")) {
+            throw new ForbiddenException("Forbidden");
+        }
+
         categoryService.update(request,id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Updated",request));
     }
