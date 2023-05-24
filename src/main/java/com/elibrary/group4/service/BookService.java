@@ -1,6 +1,7 @@
 package com.elibrary.group4.service;
 
 
+import com.elibrary.group4.Specification.BookSpecification;
 import com.elibrary.group4.Utils.Constants.IsAvailable;
 import com.elibrary.group4.exception.NotFoundException;
 import com.elibrary.group4.model.Book;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +59,8 @@ public class BookService implements IBookService {
             book.setAuthor(bookRequest.getAuthor());
             book.setReleaseYear(bookRequest.getReleaseYear());
             book.setIsAvailable(IsAvailable.AVAILABLE);
+            book.setLanguage(bookRequest.getLanguage());
+            book.setPage(bookRequest.getPage());
             book.setStock(bookRequest.getStock());
             book.setCategory(category.get());
             return bookRepository.save(book);
@@ -106,7 +111,7 @@ public class BookService implements IBookService {
 
     @Override
     public List<Book> findByTitleContains(String title) {
-        List<Book> books = bookRepository.findByTitleContains(title);
+        List<Book> books = bookRepository.findByNameContains(title);
         if (books.isEmpty()) {
             throw new NotFoundException("Book with " + title + " title is not found!");
         }
@@ -115,7 +120,7 @@ public class BookService implements IBookService {
 
     @Override
     public List<Book> findByAuthorNameContains(String authorName) {
-        List<Book> books = bookRepository.findByAuthorNameContains(authorName);
+        List<Book> books = bookRepository.findByAuthorContains(authorName);
         if (books.isEmpty()) {
             throw new NotFoundException("Book with " + authorName + " author name is not found!");
         }
@@ -124,12 +129,17 @@ public class BookService implements IBookService {
 
     @Override
     public List<Book> findByPublisherContains(String publisher) {
-        List<Book> books = bookRepository.findByPublisherContains(publisher);
-        if (books.isEmpty()) {
-            throw new NotFoundException("Book with " + publisher + " publisher is not found!");
-        }
-        return books;
+        return null;
     }
+
+//    @Override
+//    public List<Book> findByPublisherContains(String publisher) {
+//        List<Book> books = bookRepository.findByPublisherContains(publisher);
+//        if (books.isEmpty()) {
+//            throw new NotFoundException("Book with " + publisher + " publisher is not found!");
+//        }
+//        return books;
+//    }
 
     @Override
     public List<Book> findBookByCategory(String categoryName) {
@@ -156,5 +166,25 @@ public class BookService implements IBookService {
         Sort sort = Sort.by(Sort.Direction.valueOf(direction), sortBy);
         Pageable pageable = PageRequest.of((page -1), size, sort);
         return bookRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Book> listBooksUsingSpecification(Integer page, Integer pageSize, String sortField, String direction, String name, String author, String releaseYear, String language, String category) {
+
+
+        Sort sort = Sort.by(Sort.Direction.valueOf(direction), sortField);
+        Pageable pageable = PageRequest.of((page -1), pageSize, sort);
+
+        Specification<Book> spec = BookSpecification.builder()
+                .name(name)
+                .author(author)
+                .releaseYear(releaseYear)
+                .category(category)
+                .language(language)
+                .build();
+
+        Page<Book> books = bookRepository.findAll(spec, pageable);
+
+        return books;
     }
 }

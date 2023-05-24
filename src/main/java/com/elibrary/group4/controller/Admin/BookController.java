@@ -30,7 +30,7 @@ public class BookController {
     public ResponseEntity createBook(@RequestHeader("Authorization") String token, @Valid BookRequest request) throws Exception {
         var tokenAndRole = jwtUtil.getRoleAndId(token);
 
-        if (!tokenAndRole.get("role").equals("ADMIN")) {
+        if (!tokenAndRole.get("role").equals("USER")) {
             throw new ForbiddenException("Forbidden");
         }
         Book book =  bookService.create(request);
@@ -42,9 +42,14 @@ public class BookController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "5") Integer size,
             @RequestParam(defaultValue = "DESC") String direction,
-            @RequestParam(defaultValue = "bookId") String sortBy
+            @RequestParam(defaultValue = "bookId") String sortBy,
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") String author,
+            @RequestParam(defaultValue = "") String language,
+            @RequestParam(defaultValue = "") String releaseYear,
+            @RequestParam(defaultValue = "") String category
     ) throws Exception {
-        Page<Book> books =bookService.list(page, size, direction, sortBy);
+        Page<Book> books =bookService.listBooksUsingSpecification(page, size, sortBy, direction, name, author, releaseYear, language, category);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",books));
     }
 

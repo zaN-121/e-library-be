@@ -17,8 +17,9 @@ public class BookRequest {
     private String  thumbnailUrl;
     @NotBlank(message = "{invalid.author.name.required}")
     private String author;
-    @NotBlank(message = "Page is required")
+//    @NotBlank(message = "Page is required")
     private Integer page;
+    private  String language;
 
     @NotBlank(message = "Release Year is required")
     private String releaseYear;
