@@ -23,9 +23,9 @@ public class AuthService {
 
     public String login(User user){
         try {
-            User getUser = authRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
-            String token = jwtUtil.generateToken(getUser.getUserId(),getUser.getRole());
-            if(user.getEmail().equals(getUser.getEmail()) && user.getPassword().equals(getUser.getPassword())){
+            User getUser = authRepository.findByUserNameAndPassword(user.getUserName(), user.getPassword());
+            String token = jwtUtil.generateToken(getUser.getUserId(), getUser.getRole());
+            if(user.getUserName().equals(getUser.getUserName()) && user.getPassword().equals(getUser.getPassword())){
                 return token;
             }else {
                 throw new RuntimeException("Email or password incorrect");

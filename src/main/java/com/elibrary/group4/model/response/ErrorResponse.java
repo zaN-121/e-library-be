@@ -2,7 +2,7 @@ package com.elibrary.group4.model.response;
 
 public class ErrorResponse extends CommonResponse{
     public ErrorResponse(String message, String code) {
-        super(code,message);
+        super(message,code);
         super.setStatus("Failed");
     }
 }

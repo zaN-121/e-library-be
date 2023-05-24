@@ -16,7 +16,7 @@ public class FileRepository implements IFileRepository {
 
     private final Path root;
 
-    public FileRepository(@Value("${upload.path}") String rootPath) {
+    public FileRepository(@Value("/home/user/e-library-be/assets") String rootPath) {
         this.root = Paths.get(rootPath);
     }
 

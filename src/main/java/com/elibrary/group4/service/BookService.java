@@ -40,20 +40,26 @@ public class BookService implements IBookService {
                 throw new NotFoundException("Category is not found");
             }
 
-            if (!bookRequest.getImage().isEmpty()) {
-                filePath = uploadService.uploadMaterial(bookRequest.getImage());
+            if (!bookRequest.getThumbnail().isEmpty()) {
+                filePath = uploadService.uploadMaterial(bookRequest.getThumbnail());
+            } else {
+                if (bookRequest.getThumbnailUrl() != null) {
+                    filePath = bookRequest.getThumbnailUrl();
+                } else {
+                    filePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRoHYxgCBMdYnmgdwgX--7kw4Ub-z7gUGO7FDaRcODR_D6ytzzsLe2iO-lWzT9v20SY8I";
+                }
             }
 
             Book book = new Book();
-            book.setTitle(bookRequest.getTitle());
-            book.setImage(filePath);
-            book.setAuthorName(bookRequest.getAuthorName());
-            book.setPublisher(bookRequest.getPublisher());
-            book.setPublicationYear(bookRequest.getPublicationYear());
+            book.setName(bookRequest.getName());
+            book.setThumbnail(filePath);
+            book.setAuthor(bookRequest.getAuthor());
+            book.setReleaseYear(bookRequest.getReleaseYear());
             book.setIsAvailable(IsAvailable.AVAILABLE);
             book.setStock(bookRequest.getStock());
             book.setCategory(category.get());
             return bookRepository.save(book);
+
         } catch (DataIntegrityViolationException e) {
             throw new EntityExistsException();
         }
@@ -72,10 +78,9 @@ public class BookService implements IBookService {
     public void update(BookRequest bookRequest, String bookId) throws Exception {
         try {
             Book existingBook = get(bookId);
-            existingBook.setTitle(bookRequest.getTitle());
-            existingBook.setAuthorName(bookRequest.getAuthorName());
-            existingBook.setPublisher(bookRequest.getPublisher());
-            existingBook.setPublicationYear(bookRequest.getPublicationYear());
+            existingBook.setName(bookRequest.getName());
+            existingBook.setAuthor(bookRequest.getAuthor());
+            existingBook.setReleaseYear(bookRequest.getReleaseYear());
             existingBook.setStock(bookRequest.getStock());
             if(bookRequest.getStock()>=1){
                 existingBook.setIsAvailable(IsAvailable.AVAILABLE);

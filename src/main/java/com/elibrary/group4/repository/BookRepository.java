@@ -20,17 +20,17 @@ public interface BookRepository  extends JpaRepository<Book, String> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Book e SET e.stock = e.stock+1 WHERE id =?1")
+    @Query("UPDATE Book e SET e.stock = e.stock+1 WHERE e.bookId =?1")
     public void stockIncrease(String id);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Book e SET e.stock = e.stock-1 WHERE id =?1")
+    @Query("UPDATE Book e SET e.stock = e.stock-1 WHERE e.bookId =?1")
     public void stockDecrease(String id);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Book e SET e.isAvailable = com.elibrary.group4.Utils.Constants.IsAvailable.AVAILABLE WHERE id =?1")
+    @Query("UPDATE Book e SET e.isAvailable = com.elibrary.group4.Utils.Constants.IsAvailable.AVAILABLE WHERE e.bookId =?1")
     public void updateAvailable(String id);
 
 }

@@ -12,14 +12,16 @@ import java.time.LocalDate;
 @Getter @Setter
 public class BookRequest {
     @NotBlank(message = "{invalid.title.required}")
-    private String title;
-    private MultipartFile image;
+    private String name;
+    private MultipartFile thumbnail;
+    private String  thumbnailUrl;
     @NotBlank(message = "{invalid.author.name.required}")
-    private String authorName;
-    @NotBlank(message = "{invalid.publisher.required}")
-    private String publisher;
-//    @NotBlank(message = "{invalid.publication.year.required}")
-    private LocalDate publicationYear;
+    private String author;
+    @NotBlank(message = "Page is required")
+    private Integer page;
+
+    @NotBlank(message = "Release Year is required")
+    private String releaseYear;
 //    @NotBlank(message = "{invalid.is.available.required}")
 //    private IsAvailable isAvailable;
 //    @NotBlank(message = "{invalid.stock.required}")

@@ -1,5 +1,7 @@
 package com.elibrary.group4.controller.Admin;
 
+import com.elibrary.group4.Utils.Validation.JwtUtil;
+import com.elibrary.group4.exception.ForbiddenException;
 import com.elibrary.group4.model.Book;
 import com.elibrary.group4.model.request.BookRequest;
 import com.elibrary.group4.model.response.SuccessResponse;
@@ -22,8 +24,15 @@ public class BookController {
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
+    JwtUtil jwtUtil;
     @PostMapping
-    public ResponseEntity createBook(@Valid BookRequest request) throws Exception {
+    public ResponseEntity createBook(@RequestHeader("Authorization") String token, @Valid BookRequest request) throws Exception {
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        if (!tokenAndRole.get("role").equals("ADMIN")) {
+            throw new ForbiddenException("Forbidden");
+        }
         Book book =  bookService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<Book>("Created",book));
     }
@@ -40,14 +49,26 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@Valid @RequestBody BookRequest request, @PathVariable("id") String id) throws Exception{
+    public ResponseEntity update(@RequestHeader(name = "Authorization") String token, @Valid @RequestBody BookRequest request, @PathVariable("id") String id) throws Exception{
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        if (!tokenAndRole.get("role").equals("ADMIN")) {
+            throw new ForbiddenException("Forbidden");
+        }
         bookService.update(request,id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Updated", request));
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable("id")String id) throws Exception{
+    public ResponseEntity delete(@RequestHeader(name = "Authorization") String token, @PathVariable("id")String id) throws Exception{
+
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        if (!tokenAndRole.get("role").equals("ADMIN")) {
+            throw new ForbiddenException("Forbidden");
+        }
+
         bookService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Deleted",null));
     }

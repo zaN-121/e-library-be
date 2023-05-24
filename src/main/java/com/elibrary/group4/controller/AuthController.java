@@ -1,5 +1,6 @@
 package com.elibrary.group4.controller;
 
+import com.elibrary.group4.Utils.Constants.Role;
 import com.elibrary.group4.model.User;
 import com.elibrary.group4.model.request.LoginRequest;
 import com.elibrary.group4.model.request.RegisterRequest;
@@ -24,6 +25,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
+        registerRequest.setRole(Role.USER);
         User user = modelMapper.map(registerRequest, User.class);
         User regist = authService.register(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<String>("Registration Success", " " + regist.getEmail()));
@@ -33,6 +35,6 @@ public class AuthController {
     public ResponseEntity login(@RequestBody LoginRequest loginRequest){
         User user = modelMapper.map(loginRequest, User.class);
         String token = authService.login(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<String>("Login Success", ("Token " + token)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<String>("Login Success", ("Baerer " + token)));
     }
 }

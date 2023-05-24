@@ -28,15 +28,15 @@ public class UserService implements IUserService {
     @Override
     public User Create(UserRequest userRequest) throws Exception {
         try {
-            String filePath = "";
-
-            if (!userRequest.getImage().isEmpty()) {
-                filePath = uploadService.uploadMaterial(userRequest.getImage());
-            }
+//            String filePath = "";
+//
+//            if (!userRequest.getImage().isEmpty()) {
+//                filePath = uploadService.uploadMaterial(userRequest.getImage());
+//            }
 
             User user = new User();
             user.setFirstName(userRequest.getFirstName());
-            user.setImage(filePath);
+//            user.setImage(filePath);
             user.setLastName(userRequest.getLastName());
             user.setUserName(userRequest.getUserName());
             user.setEmail(userRequest.getEmail());
