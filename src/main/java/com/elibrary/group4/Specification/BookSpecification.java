@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
@@ -33,28 +34,65 @@ public class BookSpecification implements Specification<Book> {
 
     @Override
     public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        List<Predicate> predicates = new ArrayList<>();
 
-        Predicate titlePred = ofNullable(title)
-                .map(b -> like(cb, root.get("title"), title))
-                .orElse(null);
-        Predicate authorNamePred = ofNullable(authorName)
-                .map(h -> like(cb, root.get("authorName"), authorName))
-                .orElse(null);
-        Predicate publisherPred = ofNullable(publisher)
-                .map(h -> like(cb, root.get("publisher"), publisher))
-                .orElse(null);
+        if(title.split(",").length == 1) {
+            title = "";
+            Predicate titlePred = ofNullable(title)
+                    .map(b -> like(cb, root.get("title"), title))
+                    .orElse(null);
+            ofNullable(titlePred).ifPresent(predicates::add);
+        }
+        else{
+            title = title.split(",")[1];
+            Predicate titlePred = ofNullable(title)
+                    .map(b -> like(cb, root.get("title"), title))
+                    .orElse(null);
+            ofNullable(titlePred).ifPresent(predicates::add);
+
+        }
+
+        if(authorName.split(",").length == 1) {
+            authorName = "";
+            Predicate authorPred = ofNullable(authorName)
+                    .map(b -> like(cb, root.get("authorName"), authorName))
+                    .orElse(null);
+            ofNullable(authorPred).ifPresent(predicates::add);
+        }
+        else{
+            authorName = authorName.split(",")[1];
+            Predicate authorPred = ofNullable(authorName)
+                    .map(b -> like(cb, root.get("authorName"), authorName))
+                    .orElse(null);
+            ofNullable(authorPred).ifPresent(predicates::add);
+
+        }
+
+        if(publisher.split(",").length == 1) {
+            publisher = "";
+            Predicate publisherPred = ofNullable(publisher)
+                    .map(b -> like(cb, root.get("publisher"), publisher))
+                    .orElse(null);
+            ofNullable(publisherPred).ifPresent(predicates::add);
+        }
+        else{
+            publisher = publisher.split(",")[1];
+            Predicate publisherPred = ofNullable(publisher)
+                    .map(b -> like(cb, root.get("publisher"), publisher))
+                    .orElse(null);
+            ofNullable(publisherPred).ifPresent(predicates::add);
+
+        }
+
 
 //        Predicate publicationYearPred = ofNullable(publicationYear)
 //                .map(h -> like(cb, root.get("publicationYear").toString(), publicationYear.toString()))
 //                .orElse(null);
 
-        Predicate publicf = cb.and(like(cb, root.get("publisher"), publisher));
+
         Predicate categoryPred = categoryPredicate(root, cb);
 
-        List<Predicate> predicates = new ArrayList<>();
-        ofNullable(titlePred).ifPresent(predicates::add);
-        ofNullable(authorNamePred).ifPresent(predicates::add);
-        ofNullable(publicf).ifPresent(predicates::add);
+
 //        ofNullable(publicationYearPred).ifPresent(predicates::add);
         ofNullable(categoryPred).ifPresent(predicates::add);
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -80,6 +118,7 @@ public class BookSpecification implements Specification<Book> {
         }
 
             Join<Book, Category> categoryJoin = root.join("category", JoinType.INNER);
+        System.out.println(category+"ini kategori");
 
 
             return cb.and(

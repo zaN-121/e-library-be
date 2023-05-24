@@ -25,6 +25,7 @@ public class AdminBorrowController  {
 
     @PutMapping("/val/{id}")
     ResponseEntity update(@PathVariable("id") String id){
+
         borrowService.adminValidateBorrow(id);
         Borrow borrow = borrowService.findById(id).get();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new SuccessResponse<Borrow>("Updated",borrow));
