@@ -1,6 +1,8 @@
 package com.elibrary.group4.repository;
 
+import com.elibrary.group4.Utils.Constants.BorrowState;
 import com.elibrary.group4.model.Borrow;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,7 +31,5 @@ public interface BorrowRepository  extends JpaRepository<Borrow, String> {
     @Query("UPDATE Borrow e SET e.lateCharge = e.lateCharge + 1000, e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.LATE  WHERE e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.TAKEN OR e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.LATE AND e.borrowingDate < DATEADD(HOUR, -168, CURRENT_TIMESTAMP)")
     public void updateLateReturn();
 
-
-
-
+    public List<Borrow> findBorrowByBorrowState (BorrowState state);
 }
