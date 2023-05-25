@@ -23,9 +23,12 @@ public class FileRepository implements IFileRepository {
     @Override
     public String store(MultipartFile file) {
         try {
-            Path filePath = root.resolve(file.getOriginalFilename());
+            long epochTimeSeconds = System.currentTimeMillis() / 1000;
+            String fileName = epochTimeSeconds+file.getOriginalFilename();
+            Path filePath = root.resolve(fileName);
+            System.out.println(filePath);
             Files.copy(file.getInputStream(), filePath);
-            return filePath.toString();
+            return "http://localhost:8080/book-file/" + fileName;
         } catch (Exception e) {
             throw new RuntimeException("Could not store the file. Error " + e.getMessage());
         }

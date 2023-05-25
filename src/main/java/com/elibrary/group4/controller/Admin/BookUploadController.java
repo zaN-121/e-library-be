@@ -45,7 +45,7 @@ public class BookUploadController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @GetMapping("/book-file")
+    @GetMapping("/{name}")
     public ResponseEntity show(@PathVariable("name") String filename) throws IOException {
         Resource file = uploadService.downloadMaterial(filename);
         byte[] imageBytes = StreamUtils.copyToByteArray(file.getInputStream());
