@@ -1,5 +1,6 @@
 package com.elibrary.group4.controller.Admin;
 
+import com.elibrary.group4.Utils.Constants.BorrowState;
 import com.elibrary.group4.Utils.Validation.JwtUtil;
 import com.elibrary.group4.exception.ForbiddenException;
 import com.elibrary.group4.model.Book;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -57,5 +59,10 @@ public class AdminBorrowController  {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new SuccessResponse<Borrow>("Updated",borrow));
     }
 
-
+    @GetMapping("/state")
+    @SecurityRequirement(name = "Bearer Authentication")
+    ResponseEntity findByState(@RequestHeader("Authorization") String token, @RequestParam("state") String  state) {
+        BorrowState s = BorrowState.fromString(state);
+        return ResponseEntity.ok().body(new SuccessResponse<List<Borrow>>("success", borrowService.findBorrowByState(s)));
+    }
 }

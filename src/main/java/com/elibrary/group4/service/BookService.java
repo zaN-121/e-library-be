@@ -79,8 +79,8 @@ public class BookService implements IBookService {
         return book.get();
     }
 
-    @Override
-    public void update(BookRequest bookRequest, String bookId) throws Exception {
+
+    public void updatalah(BookRequest bookRequest, String bookId) throws Exception {
         try {
             Book existingBook = get(bookId);
             existingBook.setName(bookRequest.getName());
@@ -96,6 +96,40 @@ public class BookService implements IBookService {
             bookRepository.save(existingBook);
         } catch (NotFoundException e) {
             throw new NotFoundException("Update failed because ID is not found!");
+        }
+    }
+    @Override
+    public void update(BookRequest bookRequest, String bookId) throws Exception {
+        try {
+            Book existingBook = get(bookId);
+            String filePath = "";
+            Optional<Category> category = categoryRepository.findById(bookRequest.getCategoryId());
+
+            if (category.isEmpty()) {
+                throw new NotFoundException("Category is not found");
+            }
+
+            if (!bookRequest.getThumbnail().isEmpty()) {
+                filePath = uploadService.uploadMaterial(bookRequest.getThumbnail());
+            } else {
+                if (!bookRequest.getThumbnailUrl().isEmpty()) {
+                    filePath = bookRequest.getThumbnailUrl();
+                }
+            }
+
+            existingBook.setName(bookRequest.getName());
+            existingBook.setThumbnail(filePath);
+            existingBook.setAuthor(bookRequest.getAuthor());
+            existingBook.setReleaseYear(bookRequest.getReleaseYear());
+            existingBook.setIsAvailable(IsAvailable.AVAILABLE);
+            existingBook.setLanguage(bookRequest.getLanguage());
+            existingBook.setPage(bookRequest.getPage());
+            existingBook.setStock(bookRequest.getStock());
+            existingBook.setCategory(category.get());
+            bookRepository.save(existingBook);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new EntityExistsException();
         }
     }
 

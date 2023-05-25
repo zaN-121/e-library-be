@@ -145,4 +145,8 @@ public class BorrowService implements IService<Borrow> {
         }
     }
 
+    public List<Borrow> findBorrowByState(BorrowState state) {
+        return borrowRepository.findBorrowByBorrowState(state);
+    }
+
 }
