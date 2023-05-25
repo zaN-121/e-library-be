@@ -1,9 +1,13 @@
 package com.elibrary.group4.service;
 
 import com.elibrary.group4.Utils.Validation.JwtUtil;
+import com.elibrary.group4.exception.DuplicateException;
+import com.elibrary.group4.exception.NonAuthorizedException;
+import com.elibrary.group4.exception.NotFoundException;
 import com.elibrary.group4.model.User;
 import com.elibrary.group4.repository.AuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,9 +16,16 @@ public class AuthService {
     AuthRepository authRepository;
     @Autowired
     JwtUtil jwtUtil;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     public User register(User user){
         try {
+            User getUser = authRepository.findByUserName(user.getUserName());
+            if (getUser != null) {
+                throw new DuplicateException("Username already exist");
+            }
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return authRepository.save(user);
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
@@ -23,13 +34,15 @@ public class AuthService {
 
     public String login(User user){
         try {
-            User getUser = authRepository.findByUserNameAndPassword(user.getUserName(), user.getPassword());
-            String token = jwtUtil.generateToken(getUser.getUserId(), getUser.getRole());
-            if(user.getUserName().equals(getUser.getUserName()) && user.getPassword().equals(getUser.getPassword())){
+            User getUser = authRepository.findByUserName(user.getUserName());
+            System.out.println(passwordEncoder.matches(user.getPassword(), getUser.getPassword()));
+            if (passwordEncoder.matches(user.getPassword(), getUser.getPassword())) {
+                String token = jwtUtil.generateToken(getUser.getUserId(), getUser.getRole());
                 return token;
-            }else {
-                throw new RuntimeException("Email or password incorrect");
             }
+
+            throw new NonAuthorizedException("Username dan Password salah");
+
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
