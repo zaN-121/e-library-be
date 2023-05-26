@@ -30,7 +30,7 @@ public class BookController {
     public ResponseEntity createBook(@RequestHeader("Authorization") String token, @Valid BookRequest request) throws Exception {
         var tokenAndRole = jwtUtil.getRoleAndId(token);
 
-        if (!tokenAndRole.get("role").equals("USER")) {
+        if (!tokenAndRole.get("role").equals("ADMIN")) {
             throw new ForbiddenException("Forbidden");
         }
         Book book =  bookService.create(request);
