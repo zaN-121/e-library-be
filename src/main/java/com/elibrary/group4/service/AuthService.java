@@ -35,7 +35,9 @@ public class AuthService {
     public String login(User user){
         try {
             User getUser = authRepository.findByUserName(user.getUserName());
-            System.out.println(passwordEncoder.matches(user.getPassword(), getUser.getPassword()));
+            if (getUser == null) {
+                throw new NonAuthorizedException("Credential Wrong");
+            }
             if (passwordEncoder.matches(user.getPassword(), getUser.getPassword())) {
                 String token = jwtUtil.generateToken(getUser.getUserId(), getUser.getRole());
                 return token;
