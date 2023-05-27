@@ -45,7 +45,8 @@ public class UserController {
         var tokenAndRole = jwtUtil.getRoleAndId(token);
 
         if (!tokenAndRole.get("role").equals("ADMIN")) {
-            throw new ForbiddenException("Forbidden");
+            User user = userService.get(tokenAndRole.get("userId"));
+            return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",user));
         }
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",userService.list()));
     }
