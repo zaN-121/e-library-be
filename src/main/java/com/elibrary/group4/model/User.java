@@ -1,6 +1,8 @@
 package com.elibrary.group4.model;
 
 import com.elibrary.group4.Utils.Constants.Role;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Generated;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -33,6 +35,7 @@ public class User {
     @Column(name = "phone", nullable = false)
     private String phone;
     @Column(name = "password",nullable = false)
+    @JsonIgnore
     private String password;
     @Column(name = "Role",nullable = false)
     @Enumerated(EnumType.ORDINAL)

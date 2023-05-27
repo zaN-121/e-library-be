@@ -29,7 +29,7 @@ public class CategoryController {
     public ResponseEntity createCategory(@RequestHeader("Authorization") String token, @Valid @RequestBody CategoryRequest request) throws Exception{
         var tokenAndRole = jwtUtil.getRoleAndId(token);
 
-        if (!tokenAndRole.get("role").equals("USER")) {
+        if (!tokenAndRole.get("role").equals("ADMIN")) {
             throw new ForbiddenException("Forbidden");
         }
         Category category = categoryService.create(request);
