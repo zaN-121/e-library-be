@@ -31,5 +31,8 @@ public interface BorrowRepository  extends JpaRepository<Borrow, String> {
     @Query("UPDATE Borrow e SET e.lateCharge = e.lateCharge + 1000, e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.LATE  WHERE e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.TAKEN OR e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.LATE AND e.borrowingDate < DATEADD(HOUR, -168, CURRENT_TIMESTAMP)")
     public void updateLateReturn();
 
+    @Query("SELECT e from Borrow e WHERE e.user.userId=?1")
+    public List<Borrow> findBorrowByuserId (String id);
+
     public List<Borrow> findBorrowByBorrowState (BorrowState state);
 }
