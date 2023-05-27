@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/book")
 @Validated
@@ -76,5 +78,11 @@ public class BookController {
 
         bookService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Deleted",null));
+    }
+
+    @GetMapping ("/{id}")
+    public ResponseEntity findById (@PathVariable("id") String id){
+        Optional<Book> book = bookService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Deleted",book));
     }
 }

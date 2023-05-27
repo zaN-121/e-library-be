@@ -221,4 +221,12 @@ public class BookService implements IBookService {
 
         return books;
     }
+
+    public Optional<Book>findById(String id){
+              Optional<Book> book =  bookRepository.findById(id);
+              if(book.isEmpty()){
+                  throw new NotFoundException("There is no book with this id");
+              }
+              return book;
+    }
 }
