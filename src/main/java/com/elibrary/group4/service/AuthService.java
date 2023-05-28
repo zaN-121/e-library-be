@@ -6,11 +6,13 @@ import com.elibrary.group4.exception.NonAuthorizedException;
 import com.elibrary.group4.exception.NotFoundException;
 import com.elibrary.group4.model.User;
 import com.elibrary.group4.repository.AuthRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class AuthService {
     @Autowired
     AuthRepository authRepository;

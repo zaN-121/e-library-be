@@ -20,8 +20,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -203,6 +205,7 @@ public class BookService implements IBookService {
     }
 
     @Transactional(readOnly = true)
+
     public Page<Book> listBooksUsingSpecification(Integer page, Integer pageSize, String sortField, String direction, String name, String author, String releaseYear, String language, String category) {
 
 

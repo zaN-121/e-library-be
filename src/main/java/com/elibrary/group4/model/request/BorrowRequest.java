@@ -17,8 +17,6 @@ public class BorrowRequest {
 //    private BorrowState borrowState;
 //    @NotBlank(message = "{invalid.borrow.lateCharge.required}")
 //    private Double lateCharge;
-    @NotBlank(message = "{invalid.borrow.userId.required}")
-    private String userId;
     @NotBlank(message = "{invalid.borrow.bookId.required}")
     private String bookId;
 }

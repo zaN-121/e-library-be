@@ -16,6 +16,7 @@ public class BookRequest {
     private MultipartFile thumbnail;
     private String  thumbnailUrl;
     @NotBlank(message = "{invalid.author.name.required}")
+
     private String author;
 //    @NotBlank(message = "Page is required")
     private Integer page;

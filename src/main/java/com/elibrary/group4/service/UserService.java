@@ -4,6 +4,7 @@ import com.elibrary.group4.model.User;
 import com.elibrary.group4.model.request.UserRequest;
 import com.elibrary.group4.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

@@ -6,7 +6,6 @@ import jakarta.persistence.criteria.*;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import static java.util.Optional.ofNullable;
 @Data
 @Builder
 public class BookSpecification implements Specification<Book> {
+
     private String name;
     private String author;
     private String category;
@@ -129,8 +129,6 @@ public class BookSpecification implements Specification<Book> {
     private Predicate between(CriteriaBuilder cb, Path<Integer> field, int min, int max) {
         return cb.between(field, min, max);
     }
-
-
 
 
 }
