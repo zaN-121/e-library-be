@@ -40,7 +40,7 @@ public class BookController {
     @GetMapping
     public ResponseEntity getAll(
             @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "5") Integer size,
+            @RequestParam(defaultValue = "6") Integer size,
             @RequestParam(defaultValue = "DESC") String direction,
             @RequestParam(defaultValue = "bookId") String sortBy,
             @RequestParam(defaultValue = "") String name,
@@ -54,7 +54,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@RequestHeader(name = "Authorization") String token, @Valid @RequestBody BookRequest request, @PathVariable("id") String id) throws Exception{
+    public ResponseEntity update(@RequestHeader(name = "Authorization") String token, @Valid BookRequest request, @PathVariable("id") String id) throws Exception{
         var tokenAndRole = jwtUtil.getRoleAndId(token);
 
         if (!tokenAndRole.get("role").equals("ADMIN")) {
