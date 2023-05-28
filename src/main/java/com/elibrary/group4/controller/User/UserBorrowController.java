@@ -1,5 +1,7 @@
 package com.elibrary.group4.controller.User;
 
+import com.elibrary.group4.Utils.Validation.JwtUtil;
+import com.elibrary.group4.exception.ForbiddenException;
 import com.elibrary.group4.model.Book;
 import com.elibrary.group4.model.Borrow;
 import com.elibrary.group4.model.User;
@@ -16,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @RestController
 @RequestMapping("/borrow")
 @Validated
@@ -31,6 +36,9 @@ public class UserBorrowController {
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
+    JwtUtil jwtUtil;
+
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody BorrowRequest request) throws Exception {
         Borrow borrow = modelMapper.map(request,Borrow.class);
@@ -39,26 +47,57 @@ public class UserBorrowController {
         borrow.setUser(user);
         borrow.setBook(book);
         borrow.setLateCharge(0.0);
-        borrow.setReturnDate(borrow.getBorrowingDate().plusDays(7));
+        borrow.setBorrowingDate(LocalDateTime.now());
+        if(LocalTime.now().compareTo((LocalTime.of(20,0,0)))>=0){
+            borrow.setMaxTakeDate(LocalDateTime.of(LocalDateTime.now().plusDays(2).toLocalDate(), LocalTime.of(20, 0)));
+        }
+        else{
+            borrow.setMaxTakeDate(LocalDateTime.of(LocalDateTime.now().plusDays(1).toLocalDate(), LocalTime.of(20, 0)));
+        }
+
+        borrow.setReturnDate(LocalDateTime.of(LocalDateTime.now().plusDays(7).toLocalDate(), LocalTime.of(20, 0)));
         Borrow create = borrowService.add(borrow);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<>("Created",create));
     }
 
     @GetMapping
-    public ResponseEntity get() throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",borrowService.findAll()));
+    public ResponseEntity get(@RequestHeader("Authorization") String token) throws Exception{
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        ResponseEntity response = null;
+        if (tokenAndRole.get("role").equals("ADMIN")) {
+            response = ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",borrowService.findAll()));
+        } else if (tokenAndRole.get("role").equals("USER")) {
+            response = ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",borrowService.findBorrowByUserId(tokenAndRole.get("userId"))));
+        }
+
+        return response;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@Valid @RequestBody BorrowRequest request, @PathVariable("id") String id) throws Exception{
+    public ResponseEntity update(@RequestHeader("Authorization") String token, @Valid @RequestBody BorrowRequest request, @PathVariable("id") String id) throws Exception{
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        if (!tokenAndRole.get("role").equals("ADMIN")) {
+            throw new ForbiddenException("Forbidden");
+        }
         Borrow borrow = modelMapper.map(request, Borrow.class);
         Borrow update = borrowService.update(id,borrow);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Updated",update));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable("id")String id) throws Exception{
-        borrowService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Deleted",null));
+    public ResponseEntity delete(@RequestHeader("Authorization") String token, @PathVariable("id")String id) throws Exception{
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
+
+        if (tokenAndRole.get("role").equals("ADMIN")) {
+            borrowService.delete(id);
+        } else if (tokenAndRole.get("role").equals("USER")) {
+            borrowService.cancel(id);
+            return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Canceled","canceling successful"));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Deleted","Book borrowing has been deleted"));
     }
+
+
 }

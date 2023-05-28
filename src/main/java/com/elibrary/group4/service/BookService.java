@@ -45,20 +45,28 @@ public class BookService implements IBookService {
                 throw new NotFoundException("Category is not found");
             }
 
-            if (!bookRequest.getImage().isEmpty()) {
-                filePath = uploadService.uploadMaterial(bookRequest.getImage());
+            if (!bookRequest.getThumbnail().isEmpty()) {
+                filePath = uploadService.uploadMaterial(bookRequest.getThumbnail());
+            } else {
+                if (bookRequest.getThumbnailUrl() != null) {
+                    filePath = bookRequest.getThumbnailUrl();
+                } else {
+                    filePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRoHYxgCBMdYnmgdwgX--7kw4Ub-z7gUGO7FDaRcODR_D6ytzzsLe2iO-lWzT9v20SY8I";
+                }
             }
 
             Book book = new Book();
-            book.setTitle(bookRequest.getTitle());
-            book.setImage(filePath);
-            book.setAuthorName(bookRequest.getAuthorName());
-            book.setPublisher(bookRequest.getPublisher());
-            book.setPublicationYear(bookRequest.getPublicationYear());
+            book.setName(bookRequest.getName());
+            book.setThumbnail(filePath);
+            book.setAuthor(bookRequest.getAuthor());
+            book.setReleaseYear(bookRequest.getReleaseYear());
             book.setIsAvailable(IsAvailable.AVAILABLE);
+            book.setLanguage(bookRequest.getLanguage());
+            book.setPage(bookRequest.getPage());
             book.setStock(bookRequest.getStock());
             book.setCategory(category.get());
             return bookRepository.save(book);
+
         } catch (DataIntegrityViolationException e) {
             throw new EntityExistsException();
         }
@@ -73,14 +81,13 @@ public class BookService implements IBookService {
         return book.get();
     }
 
-    @Override
-    public void update(BookRequest bookRequest, String bookId) throws Exception {
+
+    public void updatalah(BookRequest bookRequest, String bookId) throws Exception {
         try {
             Book existingBook = get(bookId);
-            existingBook.setTitle(bookRequest.getTitle());
-            existingBook.setAuthorName(bookRequest.getAuthorName());
-            existingBook.setPublisher(bookRequest.getPublisher());
-            existingBook.setPublicationYear(bookRequest.getPublicationYear());
+            existingBook.setName(bookRequest.getName());
+            existingBook.setAuthor(bookRequest.getAuthor());
+            existingBook.setReleaseYear(bookRequest.getReleaseYear());
             existingBook.setStock(bookRequest.getStock());
             if(bookRequest.getStock()>=1){
                 existingBook.setIsAvailable(IsAvailable.AVAILABLE);
@@ -91,6 +98,40 @@ public class BookService implements IBookService {
             bookRepository.save(existingBook);
         } catch (NotFoundException e) {
             throw new NotFoundException("Update failed because ID is not found!");
+        }
+    }
+    @Override
+    public void update(BookRequest bookRequest, String bookId) throws Exception {
+        try {
+            Book existingBook = get(bookId);
+            String filePath = "";
+            Optional<Category> category = categoryRepository.findById(bookRequest.getCategoryId());
+
+            if (category.isEmpty()) {
+                throw new NotFoundException("Category is not found");
+            }
+
+            if (bookRequest.getThumbnail() != null) {
+                filePath = uploadService.uploadMaterial(bookRequest.getThumbnail());
+            } else {
+                if (bookRequest.getThumbnailUrl() != null) {
+                    filePath = bookRequest.getThumbnailUrl();
+                }
+            }
+
+            existingBook.setName(bookRequest.getName());
+            existingBook.setThumbnail(filePath);
+            existingBook.setAuthor(bookRequest.getAuthor());
+            existingBook.setReleaseYear(bookRequest.getReleaseYear());
+            existingBook.setIsAvailable(IsAvailable.AVAILABLE);
+            existingBook.setLanguage(bookRequest.getLanguage());
+            existingBook.setPage(bookRequest.getPage());
+            existingBook.setStock(bookRequest.getStock());
+            existingBook.setCategory(category.get());
+            bookRepository.save(existingBook);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new EntityExistsException();
         }
     }
 
@@ -106,7 +147,7 @@ public class BookService implements IBookService {
 
     @Override
     public List<Book> findByTitleContains(String title) {
-        List<Book> books = bookRepository.findByTitleContains(title);
+        List<Book> books = bookRepository.findByNameContains(title);
         if (books.isEmpty()) {
             throw new NotFoundException("Book with " + title + " title is not found!");
         }
@@ -115,7 +156,7 @@ public class BookService implements IBookService {
 
     @Override
     public List<Book> findByAuthorNameContains(String authorName) {
-        List<Book> books = bookRepository.findByAuthorNameContains(authorName);
+        List<Book> books = bookRepository.findByAuthorContains(authorName);
         if (books.isEmpty()) {
             throw new NotFoundException("Book with " + authorName + " author name is not found!");
         }
@@ -124,12 +165,17 @@ public class BookService implements IBookService {
 
     @Override
     public List<Book> findByPublisherContains(String publisher) {
-        List<Book> books = bookRepository.findByPublisherContains(publisher);
-        if (books.isEmpty()) {
-            throw new NotFoundException("Book with " + publisher + " publisher is not found!");
-        }
-        return books;
+        return null;
     }
+
+//    @Override
+//    public List<Book> findByPublisherContains(String publisher) {
+//        List<Book> books = bookRepository.findByPublisherContains(publisher);
+//        if (books.isEmpty()) {
+//            throw new NotFoundException("Book with " + publisher + " publisher is not found!");
+//        }
+//        return books;
+//    }
 
     @Override
     public List<Book> findBookByCategory(String categoryName) {
@@ -159,18 +205,19 @@ public class BookService implements IBookService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Book> listBooksUsingSpecification(Integer page, Integer pageSize, String sortField, String direction, String title, String authorName, String publisher, String category) {
+
+    public Page<Book> listBooksUsingSpecification(Integer page, Integer pageSize, String sortField, String direction, String name, String author, String releaseYear, String language, String category) {
 
 
         Sort sort = Sort.by(Sort.Direction.valueOf(direction), sortField);
         Pageable pageable = PageRequest.of((page -1), pageSize, sort);
 
         Specification<Book> spec = BookSpecification.builder()
-                .title(title)
-                .authorName(authorName)
-                .publisher(publisher)
-//                .publicationYear(Integer.parseInt(publicationYear))
+                .name(name)
+                .author(author)
+                .releaseYear(releaseYear)
                 .category(category)
+                .language(language)
                 .build();
 
         Page<Book> books = bookRepository.findAll(spec, pageable);
@@ -178,7 +225,12 @@ public class BookService implements IBookService {
         return books;
     }
 
-    private Pageable pageable(int page, int pageSize, String sortField, Sort.Direction sortDirection) {
-        return PageRequest.of(page, pageSize);
+    public Optional<Book>findById(String id){
+              Optional<Book> book =  bookRepository.findById(id);
+              if(book.isEmpty()){
+                  throw new NotFoundException("There is no book with this id");
+              }
+              return book;
     }
+
 }

@@ -1,8 +1,13 @@
 package com.elibrary.group4.model.request;
 
+import com.elibrary.group4.Utils.Constants.Role;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Getter @Setter
 public class RegisterRequest {
@@ -18,6 +23,6 @@ public class RegisterRequest {
     private String password;
     @NotBlank(message = "phone is required")
     private String phone;
-    @NotBlank(message = "Role is required")
-    private String Role;
+    @Nullable
+    private Role Role;
 }

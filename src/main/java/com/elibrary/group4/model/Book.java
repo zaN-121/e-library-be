@@ -18,17 +18,20 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "book_id")
     private String bookId;
-    @Column(name = "title",nullable = false)
-    private String title;
-    @Column(name = "image", nullable = false)
-    private String image;
-    @Column(name = "author_name",nullable = false)
-    private String authorName;
-    @Column(name = "publisher",nullable = false)
-    private String publisher;
-    @Column(name = "publication_year",nullable = false)
-    private Integer publicationYear;
-    @Column(name = "isAvailable",nullable = false)
+    @Column(name = "name",nullable = false)
+    private String name;
+    @Column(name = "author",nullable = false)
+    private String author;
+    @Column(name = "thumbnail", nullable = false)
+    private String thumbnail;
+    @Column(name = "page")
+    private Integer page;
+    @Column(name = "release_year",nullable = false)
+    private String releaseYear;
+    @Column(name = "language")
+    private String language;
+    @Column(name = "is_available",nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private IsAvailable isAvailable;
     @Column(name = "stock",nullable = false)
     private Integer stock;
