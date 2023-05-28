@@ -123,7 +123,7 @@ public class BorrowService implements IService<Borrow> {
 
     }
 
-    @Scheduled(fixedRate = 86400000)
+    @Scheduled(cron = "0 0 20 * * ?")
     public void lateReturn(){
         borrowRepository.updateLateReturn();
     }

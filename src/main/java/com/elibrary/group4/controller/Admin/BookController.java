@@ -45,7 +45,7 @@ public class BookController {
             @RequestParam(defaultValue = "5") Integer size,
             @RequestParam(defaultValue = "DESC") String direction,
             @RequestParam(defaultValue = "bookId") String sortBy,
-            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "quadrant") String name,
             @RequestParam(defaultValue = "") String author,
             @RequestParam(defaultValue = "") String language,
             @RequestParam(defaultValue = "") String releaseYear,
@@ -83,6 +83,6 @@ public class BookController {
     @GetMapping ("/{id}")
     public ResponseEntity findById (@PathVariable("id") String id){
         Optional<Book> book = bookService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Deleted",book));
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Find",book));
     }
 }

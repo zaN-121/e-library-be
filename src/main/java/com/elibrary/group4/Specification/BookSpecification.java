@@ -27,7 +27,6 @@ public class BookSpecification implements Specification<Book> {
         List<Predicate> predicates = new ArrayList<>();
 
         if(name.split(",").length == 1) {
-            name = "";
             Predicate namePred = ofNullable(name)
                     .map(b -> like(cb, root.get("name"), name))
                     .orElse(null);
@@ -44,7 +43,6 @@ public class BookSpecification implements Specification<Book> {
 
 
         if(author.split(",").length == 1) {
-            author = "";
             Predicate authorPred = ofNullable(author)
                     .map(b -> like(cb, root.get("author"), author))
                     .orElse(null);
@@ -60,7 +58,6 @@ public class BookSpecification implements Specification<Book> {
         }
 
         if(language.split(",").length == 1) {
-            language = "";
             Predicate languagePred = ofNullable(language)
                     .map(b -> like(cb, root.get("language"), language))
                     .orElse(null);
@@ -76,7 +73,6 @@ public class BookSpecification implements Specification<Book> {
         }
 
         if(releaseYear.split(",").length == 1) {
-            releaseYear = "";
             Predicate releaseYearPred = ofNullable(releaseYear)
                     .map(b -> like(cb, root.get("releaseYear"), releaseYear))
                     .orElse(null);

@@ -18,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @RestController
 @RequestMapping("/borrow")
 @Validated
@@ -44,7 +47,15 @@ public class UserBorrowController {
         borrow.setUser(user);
         borrow.setBook(book);
         borrow.setLateCharge(0.0);
-        borrow.setReturnDate(borrow.getBorrowingDate().plusDays(7));
+        borrow.setBorrowingDate(LocalDateTime.now());
+        if(LocalTime.now().compareTo((LocalTime.of(20,0,0)))>=0){
+            borrow.setMaxTakeDate(LocalDateTime.of(LocalDateTime.now().plusDays(2).toLocalDate(), LocalTime.of(20, 0)));
+        }
+        else{
+            borrow.setMaxTakeDate(LocalDateTime.of(LocalDateTime.now().plusDays(1).toLocalDate(), LocalTime.of(20, 0)));
+        }
+
+        borrow.setReturnDate(LocalDateTime.of(LocalDateTime.now().plusDays(7).toLocalDate(), LocalTime.of(20, 0)));
         Borrow create = borrowService.add(borrow);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<>("Created",create));
     }
@@ -56,7 +67,7 @@ public class UserBorrowController {
         ResponseEntity response = null;
         if (tokenAndRole.get("role").equals("ADMIN")) {
             response = ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",borrowService.findAll()));
-        } else if (tokenAndRole.get("role").equals("user")) {
+        } else if (tokenAndRole.get("role").equals("USER")) {
             response = ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success",borrowService.findBorrowByUserId(tokenAndRole.get("userId"))));
         }
 
