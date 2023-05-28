@@ -90,11 +90,13 @@ public class UserBorrowController {
     public ResponseEntity delete(@RequestHeader("Authorization") String token, @PathVariable("id")String id) throws Exception{
         var tokenAndRole = jwtUtil.getRoleAndId(token);
 
-        if (!tokenAndRole.get("role").equals("ADMIN")) {
-            throw new ForbiddenException("Forbidden");
+        if (tokenAndRole.get("role").equals("ADMIN")) {
+            borrowService.delete(id);
+        } else if (tokenAndRole.get("role").equals("USER")) {
+            borrowService.cancel(id);
+            return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Canceled","canceling successful"));
         }
-        borrowService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Deleted",null));
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Deleted","Book borrowing has been deleted"));
     }
 
 

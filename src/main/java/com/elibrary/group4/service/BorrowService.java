@@ -83,6 +83,23 @@ public class BorrowService implements IService<Borrow> {
         borrowRepository.delete(optionalBorrow.get());
     }
 
+    public void cancel(String id) {
+        Optional<Borrow> optionalBorrow;
+        try {
+            optionalBorrow = borrowRepository.findById(id);
+            if (optionalBorrow.isEmpty()) {
+                throw new NotFoundException("Book borrowing not found");
+            }
+            if (!optionalBorrow.get().getBorrowState().equals(BorrowState.CANBETAKE)) {
+                throw new RuntimeException("Anda harus mengembalikan buku");
+            }
+        } catch (NotFoundException e) {
+            throw new NotFoundException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @Override
     public Borrow update(String id, Borrow params) {
         Optional<Borrow> optionalBorrow;
@@ -145,6 +162,10 @@ public class BorrowService implements IService<Borrow> {
         }
     }
 
+ fix/book-update
+    public List<Borrow> findBorrowByState(BorrowState state) {
+        return borrowRepository.findBorrowByBorrowState(state);
+    }
 
 
 }
