@@ -13,7 +13,7 @@ import java.util.Map;
 public class JwtUtil {
     @Value("elibraryfkjdkajkfjakfjakfjakjfk")
     private String jwtSecret;
-    @Value("5000000")
+    @Value("${jwt_expire}")
     private Integer jwtExparation;
 
 
@@ -33,15 +33,15 @@ public class JwtUtil {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
         }catch (MalformedJwtException e){
-            throw new RuntimeException("Invalid Jwt Token");
+            throw new JwtException("Invalid Jwt Token");
         }catch (ExpiredJwtException e){
-            throw new RuntimeException("Token is expired");
+            throw new JwtException("Token is expired");
         }catch (UnsupportedJwtException e){
-            throw new RuntimeException("Jwt Token Unsupported");
+            throw new JwtException("Jwt Token Unsupported");
         }catch (IllegalArgumentException e){
-            throw new RuntimeException("Jwt is invalid");
+            throw new JwtException("Jwt is invalid");
         }catch (SignatureException e){
-            throw new RuntimeException("Jwt Signature not match");
+            throw new JwtException("Jwt Signature not match");
         }
     }
 
