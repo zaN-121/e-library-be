@@ -40,11 +40,11 @@ public class UserBorrowController {
     JwtUtil jwtUtil;
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody BorrowRequest request) throws Exception {
+    public ResponseEntity create(@Valid @RequestBody BorrowRequest request, @RequestHeader("Authorization") String token) throws Exception {
+        var tokenAndRole = jwtUtil.getRoleAndId(token);
         Borrow borrow = modelMapper.map(request,Borrow.class);
         Book book = bookService.get(request.getBookId());
-        User user = userService.get(request.getUserId());
-        borrow.setUser(user);
+        borrow.setUser(userService.get(tokenAndRole.get("userId")));
         borrow.setBook(book);
         borrow.setLateCharge(0.0);
         borrow.setBorrowingDate(LocalDateTime.now());
