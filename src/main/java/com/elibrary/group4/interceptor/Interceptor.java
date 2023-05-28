@@ -15,7 +15,8 @@ public class Interceptor implements HandlerInterceptor {
     JwtUtil jwtUtil;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(request.getRequestURI().contains("login") || request.getRequestURI().contains("register")){
+        System.out.println(request.getHeader("Authorization"));
+        if(request.getRequestURI().contains("login") || request.getRequestURI().contains("register") || request.getRequestURI().contains("swagger") || request.getRequestURI().contains("v3")){
             return true;
         }
         String token = request.getHeader("Authorization");

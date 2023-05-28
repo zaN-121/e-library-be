@@ -38,6 +38,6 @@ public class AuthController {
     public ResponseEntity login(@RequestBody LoginRequest loginRequest){
         User user = modelMapper.map(loginRequest, User.class);
         String token = authService.login(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<String>("Login Success", ("Baerer " + token)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse<String>("Login Success", ("Bearer " + token)));
     }
 }
