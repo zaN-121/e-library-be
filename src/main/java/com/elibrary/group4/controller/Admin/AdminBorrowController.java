@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,6 +44,7 @@ public class AdminBorrowController  {
         }
         borrowService.adminValidateBorrow(id);
         Borrow borrow = borrowService.findById(id).get();
+        borrow.setReturnDate(LocalDateTime.of(LocalDateTime.now().plusDays(7).toLocalDate(), LocalTime.of(20, 0)));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new SuccessResponse<Borrow>("Updated",borrow));
     }
 

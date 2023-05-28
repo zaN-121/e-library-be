@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Getter @Setter
 public class BorrowRequest {
 //    @NotBlank(message = "{invalid.borrow.borrowDate.required}")
-    private LocalDate borrowingDate;
+//    private LocalDate borrowingDate;
 //    @NotBlank(message = "{invalid.borrow.returnDate.required}")
 //    private LocalDate returnDate;
 //    @NotBlank(message = "{invalid.borrow.borrowState.required}")

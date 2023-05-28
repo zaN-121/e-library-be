@@ -18,17 +18,17 @@ import java.util.List;
 public interface BorrowRepository  extends JpaRepository<Borrow, String> {
     public List<Borrow> findBorrowByUserUserId(String id);
 
-    @Query("SELECT book.bookId FROM Borrow e WHERE e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.CANBETAKE AND e.borrowingDate < DATEADD(HOUR, -24, CURRENT_TIMESTAMP)")
+    @Query("SELECT book.bookId FROM Borrow e WHERE e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.CANBETAKE AND e.borrowingDate <= CURRENT_TIMESTAMP")
     public List<String> findLateTakeId();
 
     @Modifying
     @Transactional
-    @Query("UPDATE Borrow e SET e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.DECLINE WHERE e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.CANBETAKE AND e.borrowingDate < DATEADD(HOUR, -24, CURRENT_TIMESTAMP)")
+    @Query("UPDATE Borrow e SET e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.DECLINE WHERE e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.CANBETAKE AND e.maxTakeDate <= CURRENT_TIMESTAMP")
     public void updateLateTake();
 
     @Modifying
     @Transactional
-    @Query("UPDATE Borrow e SET e.lateCharge = e.lateCharge + 1000, e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.LATE  WHERE e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.TAKEN OR e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.LATE AND e.borrowingDate < DATEADD(HOUR, -168, CURRENT_TIMESTAMP)")
+    @Query("UPDATE Borrow e SET e.lateCharge = e.lateCharge + 1000, e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.LATE  WHERE e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.TAKEN OR e.borrowState = com.elibrary.group4.Utils.Constants.BorrowState.LATE AND e.returnDate <= CURRENT_TIMESTAMP")
     public void updateLateReturn();
 
     @Query("SELECT e from Borrow e WHERE e.user.userId=?1")
