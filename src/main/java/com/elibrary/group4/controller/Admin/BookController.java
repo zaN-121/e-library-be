@@ -45,7 +45,7 @@ public class BookController {
             @RequestParam(defaultValue = "6") Integer size,
             @RequestParam(defaultValue = "DESC") String direction,
             @RequestParam(defaultValue = "bookId") String sortBy,
-            @RequestParam(defaultValue = "quadrant") String name,
+            @RequestParam(defaultValue = "") String name,
             @RequestParam(defaultValue = "") String author,
             @RequestParam(defaultValue = "") String language,
             @RequestParam(defaultValue = "") String releaseYear,
