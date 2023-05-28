@@ -26,6 +26,7 @@ public class UserController {
     @Autowired
     JwtUtil jwtUtil;
 
+
     @PostMapping
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity create(@RequestHeader("Authorization") String token, @Valid UserRequest request) throws Exception {

@@ -109,10 +109,10 @@ public class BookService implements IBookService {
                 throw new NotFoundException("Category is not found");
             }
 
-            if (!bookRequest.getThumbnail().isEmpty()) {
+            if (bookRequest.getThumbnail() != null) {
                 filePath = uploadService.uploadMaterial(bookRequest.getThumbnail());
             } else {
-                if (!bookRequest.getThumbnailUrl().isEmpty()) {
+                if (bookRequest.getThumbnailUrl() != null) {
                     filePath = bookRequest.getThumbnailUrl();
                 }
             }
